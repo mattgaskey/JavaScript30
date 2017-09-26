@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>JS-CSS Clock</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			html {
+				background: url(bg.jpg);
+				background-size: cover;
+				text-align: center;
+				font-size: 10px;
+			}
+
+			body {
+				margin: 0;
+				font-size: 2rem;
+				display: flex;
+				flex:1;
+				min-height: 100vh;
+				align-items: center;
+			}
+
+			.clock {
+				width: 40rem;
+				height: 40rem;
+				border-radius: 50%;
+				border: 2rem solid white;
+				margin: 5rem auto;
+				position: relative;
+				padding: 2rem;
+				box-shadow:
+	        0 0 0 4px rgba(0,0,0,0.1),
+	        inset 0 0 0 3px #EFEFEF,
+	        inset 0 0 10px black,
+	        0 0 10px rgba(0,0,0,0.2);
+			}
+
+			.clock-face {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				transform: translateY(1px);
+			}
+
+			.dot {
+				width: 1rem;
+				height: 1rem;
+				border: .5rem solid black;
+				border-radius: 50%;
+				position: absolute;
+				background-color: black;
+			}
+
+			.dot1 {
+				top: 1rem;
+				left: calc(50% - 1rem);
+			}
+
+			.dot2 {
+				top: calc(50% - 1rem);
+				left: 1rem;
+			}
+
+			.dot3 {
+				bottom: 1rem;
+				left: calc(50% - 1rem);
+			}
+
+			.dot4 {
+				top: calc(50% - 1rem);
+				right: 1rem;
+			}
+
+			.hand {
+				width: 50%;
+				height: 6px;
+				border-radius: 6px;
+				background: #999;
+				position: absolute;
+				top: 50%;
+				transform-origin: 100%;
+				transition: all 0.1s;
+				transition-timing-function: cubic-bezier(0.34,-0.29, 0.42, 1.69); /* slightly bounce the hands as they move */
+			}
+
+			.hour-hand {
+				width: 35%;
+				height: 10px;
+				border-radius: 10px;
+				z-index: 3;
+				transform: translateX(6rem) rotate(120deg);
+			}
+
+			.minute-hand {
+				width: 45%;
+				height: 8px;
+				border-radius: 6px;
+				z-index: 2;
+				transform: translateX(2rem) rotate(90deg);
+			}
+
+			.second-hand {
+				background: red;
+				z-index: 1;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="clock">
+			<div class="clock-face">
+				<div class="dot dot1"></div>
+				<div class="dot dot2"></div>
+				<div class="dot dot3"></div>
+				<div class="dot dot4"></div>
+				<div class="hand hour-hand"></div>
+				<div class="hand minute-hand"></div>
+				<div class="hand second-hand"></div>
+			</div>
+		</div>
+
+		<script>
+			//grab the current time
+			var d = new Date();
+			//set the hours in 12-hour format
+			var h = d.getHours() > 12 ? d.getHours() - 12 : d.getHours();
+			//set minutes
+			var m = d.getMinutes();
+			//set seconds
+			var s = d.getSeconds();
+
+			//set the starting positions in degrees of each hand (add 90 to get each hand to '12')
+			var h0 = 90 + h * 30;
+			var m0 = 90 + m * 6;
+			var s0 = 90 + s * 6 - 6;
+
+			//calculate the delta for seconds and minutes to calibrate the first rotation of the minute and hour hands
+			var mdelta = 60 - m;
+			var sdelta = 60 - s;
+
+			//grab each hand
+			var hour = document.querySelector('.hour-hand');
+			var minute = document.querySelector('.minute-hand');
+			var second = document.querySelector('.second-hand');
+
+			//position each hand to its 0 position
+			hour.style.transform = `translateX(6rem) rotate(${h0}deg)`;
+			minute.style.transform = `translateX(2rem) rotate(${m0}deg)`;
+			second.style.transform = `rotate(${s0}deg)`;
+
+			//move the minute hand for the first time only after the sdelta has elapsed
+			function firstMinuteTick() {
+				setTimeout(minuteTick, sdelta*1000);
+			}
+
+			//move the hour hand for the first time only after the mdelta has elapsed
+			function firstHourTick() {
+				setTimeout(hourTick, mdelta*60000)
+			}
+
+			//increae the second hand rotation by 6 degrees every 1000ms
+			function secondTick() {
+				s0 += 6;
+				second.style.transform = `rotate(${s0}deg)`;
+				setTimeout(secondTick, 1000);
+			}
+
+			//increase the minute hand rotation by 6 degrees every 60000ms
+			function minuteTick() {
+				m0 += 6;
+				minute.style.transform = `translateX(2rem) rotate(${m0}deg)`;
+				setTimeout(minuteTick, 60000);
+			}
+
+			//increase the hour hand rotation by 30 degrees every 3600000ms
+			function hourTick() {
+				h0 += 30;
+				hour.style.transform = `translateX(6rem) rotate(${h0}deg)`;
+				setTimeout(minuteTick, 3600000);
+			}
+
+			//start the second hand immediately
+			secondTick();
+			//start the minute hand when second hand reaches '12'
+			firstMinuteTick();
+			//start the hour hand when minute hand reaches '12'
+			firstHourTick();
+		</script>
+	</body>
+</html>
