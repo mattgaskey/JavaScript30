@@ -58,20 +58,13 @@
 		<div class="circle"></div>
 		<script>
 			const inputs = document.querySelectorAll('input');
-			const circle = document.querySelector(".circle");
 			const hl = document.querySelector(".hl");
 
 			inputs.forEach(input => input.addEventListener('input', handleChange));
 
 			function handleChange(e) {
-				if (this.type === 'color') {
-					circle.style.setProperty('--color', this.value);
-					hl.style.setProperty('--color', this.value);
-				} else if (this.name === 'size') {
-					circle.style.setProperty('--size', this.value + this.dataset.sizing);
-				} else if (this.name === 'radius') {
-					circle.style.setProperty('--radius', this.value + this.dataset.sizing);
-				}
+				const units = this.dataset.sizing || '';
+				document.documentElement.style.setProperty(`--${this.name}`, this.value + units);
 			}
 
 		</script>
