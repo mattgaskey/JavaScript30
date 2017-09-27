@@ -1,4 +1,4 @@
-function playSound(e) {
+function playSound(event) {
 	const key = event.which || event.keyCode;
 	const beat = document.querySelectorAll(`[data-key="${key}"`);
 	if (beat.length > 0) {
