@@ -59,12 +59,14 @@
 		<script>
 			const inputs = document.querySelectorAll('input');
 			const circle = document.querySelector(".circle");
+			const hl = document.querySelector(".hl");
 
 			inputs.forEach(input => input.addEventListener('input', handleChange));
 
 			function handleChange(e) {
 				if (this.type === 'color') {
-					circle.style.setProperty('--color', this.value)
+					circle.style.setProperty('--color', this.value);
+					hl.style.setProperty('--color', this.value);
 				} else if (this.name === 'size') {
 					circle.style.setProperty('--size', this.value + this.dataset.sizing);
 				} else if (this.name === 'radius') {
