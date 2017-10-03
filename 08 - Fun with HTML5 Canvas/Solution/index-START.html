@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+//select the canvas area
+const canvas = document.querySelector('#draw');
+//drawing happens in the context of the canvas, either 2d or 3d
+const ctx = canvas.getContext('2d');
+//set width and height of canvas to full window
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+//define the stroke color and edge shapes
+ctx.strokeStyle = '#ff2700';
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+
+//mutable variables
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+let hue = 0;
+let direction = true;
+
+
+function draw(e) {
+	//isDrawing corresponds to mouse events, returns boolean
+	if (!isDrawing) return; //if mouse is not down, don't do nothin'
+	//set the rainbow effect
+	ctx.strokeStyle = `hsl(${hue}, 100%, 50%`;
+	//start drawing
+	ctx.beginPath();
+	//set the context location
+	ctx.moveTo(lastX, lastY);
+	//draw a line from context location to new location (updated by mouse move)
+	ctx.lineTo(e.offsetX, e.offsetY);
+	//draw the stroke
+	ctx.stroke();
+	//update the context location (canvas draws pixel by pixel)
+	[lastX, lastY] = [e.offsetX, e.offsetY];
+	//increase the hue for the rainbow effect
+	hue++;
+	//reset the hue at 360
+	if (hue >= 360) {
+		hue = 0;
+	}
+	//set the mutabe variable to true or false at upper and lower limits of line
+	//growth
+	if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+		direction = !direction;
+	}
+	//as line continues, increase and decrease the lineWidth
+	if (direction) {
+		ctx.lineWidth++;
+	} else {
+		ctx.lineWidth--;
+	}
+}
+
+//on mousedown, allow drawing and update initial coordinates to mouse position
+canvas.addEventListener('mousedown', (e) => {
+	isDrawing = true;
+	[lastX, lastY] = [e.offsetX, e.offsetY];
+});
+
+//bind the draw function to mousemove
+canvas.addEventListener('mousemove', draw);
+
+//disallow drawing on mouseup (release click) and mouseout (mouse leaves canvas)
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+</style>
+
+</body>
+</html>

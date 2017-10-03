@@ -99,6 +99,33 @@
   </div>
 
 <script>
+
+const inputs = document.querySelectorAll('input');
+inputs.forEach((input, index) => {
+	input.addEventListener('click', handleClick);
+	input.dataset.place = index;
+});
+
+let x = 0;
+
+function handleClick(e) {
+	const thisNode = e.currentTarget;
+	if (e.shiftKey) {
+		if (x < e.currentTarget.dataset.place) {
+			for (let i = x; i <= e.currentTarget.dataset.place; i++) {
+				let el = document.querySelector(`[data-place="${i}"]`);
+				el.checked = true;
+			}
+		} else if (x > e.currentTarget.dataset.place) {
+			for (let i = e.currentTarget.dataset.place; i <= x; i++) {
+				let el = document.querySelector(`[data-place="${i}"]`);
+				el.checked = true;
+			}
+		}
+	}
+	x = e.currentTarget.dataset.place;
+}
+
 </script>
 </body>
 </html>
