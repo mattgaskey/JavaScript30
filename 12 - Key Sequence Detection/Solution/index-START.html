@@ -7,6 +7,18 @@
 </head>
 <body>
 <script>
+	window.addEventListener('keyup', (e) => {
+		matchArr.push(e.key);
+		if (matchArr.length > checkArr.length) {
+			matchArr.splice(-(checkArr.length - 1), matchArr.length - checkArr.length);
+		}
+		if (matchArr.join('') === checkArr.join('')) {
+			console.log('KONAMI');
+			// do something here
+		}
+	});
+	let matchArr = [];
+	const checkArr = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a', 'Enter'];
 </script>
 </body>
 </html>
