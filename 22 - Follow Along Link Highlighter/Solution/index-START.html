@@ -26,7 +26,29 @@
     </div>
 
   <script>
-    // 👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀
+    
+  //grab all the links
+  const triggers = document.querySelectorAll('a');
+  //create the highligh span, give it a class name and render it to the page
+  const highlight = document.createElement('span');
+  highlight.classList.add('highlight');
+  document.body.append(highlight);
+
+
+  function highlightLink() {
+  	//return the coordinates and size for this element
+  	const linkCoords = this.getBoundingClientRect();
+  	//set the same size for the highlight span, plus a bit of width
+  	highlight.style.width = `${linkCoords.width + 8}px`;
+  	highlight.style.height = `${linkCoords.height}px`;
+  	//set the coordinates for the highlight span, adjusting for scroll and the extra
+  	//width
+  	highlight.style.transform = `translate(${linkCoords.left - 4}px, ${linkCoords.top + window.scrollY}px)`;
+  }
+
+  //bind the highlight event to mouseover on all links
+  triggers.forEach(link => link.addEventListener('mouseenter', highlightLink));
+
   </script>
 </body>
 </html>

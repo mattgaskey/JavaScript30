@@ -10,8 +10,51 @@
   </div>
 
 <script>
+
+	//browser API
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+  //new instance
+  const recognition = new SpeechRecognition();
+  //return speech results that are not yet final; use this to output interim results
+  //that can be overwritten when a speech transcript is deemed final
+  //if left 'false', output will only show once the isFinal resolves to true
+  recognition.interimResults = true;
+  recognition.lang = 'ro';
+
+
+  let p = document.createElement('p');
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  //listen for when API returns a positive match result; since we are doing interim 
+  //results, this will be a stream of events built almost word by word
+  recognition.addEventListener('result', e => {
+  	//put all the results for this event into an array
+  	const transcript = [...e.results]
+  	//map the array for the first nested array
+  		.map(result => result[0])
+  		//map the resulting array for the transcript node
+  		.map(result => result.transcript)
+  		//join the transcripts to a single string
+  		.join('');
+  	//drop the joined transcript string into a paragraph
+  	 p.textContent = transcript;
+  	 //when a pause occurs, the API interprets the transcript as isFinal
+  	 if (e.results[0].isFinal) {
+  	 	//if that happens, don't overwrite the existing p tag, create a new one and
+  	 	//apend the list
+  	 	p = document.createElement('p');
+  	 	words.appendChild(p);
+  	 }
+  });
+
+  //after each result event resolves isFinal to true, the result listener stops
+  //so, look for the end event and start listening for speech again
+  recognition.addEventListener('end', recognition.start);
+  //start listening for speech on page load -- or any other prompt for a cleaner 
+  //implementation
+  recognition.start();
 
 </script>
 
