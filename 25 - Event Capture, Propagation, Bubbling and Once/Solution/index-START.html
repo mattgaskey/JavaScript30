@@ -37,8 +37,31 @@
   }
 </style>
 
-<button></button>
+<button>Button Here</button>
 <script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+  function logText(e) {
+    //stopPropagation stops bubbling up
+    e.stopPropagation();
+    console.log(this.classList.value);
+  }
+
+  divs.forEach(div => div.addEventListener('click', logText, {
+    //capture stops event from capturing down the nested elements
+    capture: true
+  }));
+
+  button.addEventListener('click', () => console.log('Clicked!'), {
+    //once keep events from repeating, e.g. unbinds event listener
+    once: true
+  });
+
+  //normal event = fires on innermost div and bubbles up
+  //stopPropagation + normal event = fires on innermost div
+  //normal event + capture: true = fires on outermost div and bubbles down
+  //normal event + stopPropagation + capture: true = fires on outermost div
 
 </script>
 </body>
