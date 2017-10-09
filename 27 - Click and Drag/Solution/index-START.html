@@ -35,6 +35,55 @@
   </div>
 
 <script>
+
+const slider = document.querySelector('.items');
+//set a flag for mousedown
+let isDown = false;
+//define these inside the function
+let startX;
+let scrollLeft;
+
+function downClick(e) {
+	//you're clickin'!
+	isDown = true;
+	//something to show the user they're clicking something draggable
+	slider.classList.add('active');
+	//set the position on the element where you're clickin'; take into account the element's offset; don't need to redo the JS if padding/margins change
+	startX = e.pageX - slider.offsetLeft;
+	//set the amount the element is already scrolled
+	scrollLeft = slider.scrollLeft;
+}
+
+function releaseScroll() {
+	//you ain't clickin'!
+	isDown = false;
+	slider.classList.remove('active');
+}
+
+function drag(e) {
+	//if you ain't clickin', you ain't draggin'
+	if (!isDown) return;
+	//don't select anything while dragging
+	e.preventDefault();
+	//grab the mouse position as you're dragging
+	const x = e.pageX - slider.offsetLeft;
+	//calculate the distance dragged from the original downClick
+	const walk = (x - startX)*2.5;
+	//scroll the slider
+	slider.scrollLeft = scrollLeft - walk;
+}
+
+
+slider.addEventListener('mousedown', downClick);
+
+slider.addEventListener('mouseleave', releaseScroll);
+
+slider.addEventListener('mouseup', releaseScroll);
+
+slider.addEventListener('mousemove', drag);
+
+
+
 </script>
 
   </body>
