@@ -11,7 +11,12 @@
 				--radius: 50%;
 			}
 
+			html {
+				max-height: 98vh;
+			}
+
 			body {
+				max-height: 98vh;
 				text-align: center;
 				background: #222;
 				color: white;
@@ -33,7 +38,7 @@
 				color: var(--color);
 				background-color: var(--color);
 				border-radius: var(--radius);
-				margin: 20px auto;
+				margin: 10px auto;
 			}
 
 			.hl {
@@ -64,6 +69,7 @@
 
 			function handleChange(e) {
 				const units = this.dataset.sizing || '';
+				
 				document.documentElement.style.setProperty(`--${this.name}`, this.value + units);
 			}
 
